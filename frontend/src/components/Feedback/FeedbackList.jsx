@@ -13,12 +13,12 @@ const FeedbackList = ({ userId, isAdmin = false }) => {
   const [feedbackList, setFeedbackList] = useState([]);
   const [loadingFeedback, setLoadingFeedback] = useState(true);
   const { currentUser } = useAuth();
-  
+
   useEffect(() => {
     const loadFeedback = async () => {
       setLoadingFeedback(true);
       await fetchFeedback();
-      
+
       let fbList;
       if (isAdmin) {
         fbList = getAllFeedback();
@@ -28,7 +28,7 @@ const FeedbackList = ({ userId, isAdmin = false }) => {
       setFeedbackList(fbList);
       setLoadingFeedback(false);
     };
-    
+
     if (currentUser) {
       loadFeedback();
     }
@@ -60,76 +60,100 @@ const FeedbackList = ({ userId, isAdmin = false }) => {
 
   const handleUpdateStatus = async (feedbackId, newStatus) => {
     await updateFeedbackStatus(feedbackId, newStatus);
+    setFeedbackList((prevFeedback) =>
+      prevFeedback.map((feedback) =>
+        feedback._id === feedbackId ? { ...feedback, status: newStatus } : feedback
+      )
+    );
   };
 
   return (
     <div className="space-y-4">
       {feedbackList.map((feedback) => (
         <Card key={feedback._id}>
-          <CardHeader className="pb-3">
-            <div className="flex items-start justify-between">
-              <div>
-                <CardTitle className="text-base">
-                  {feedback.user.name || feedback.userName || 'Anonymous'}
-                </CardTitle>
-                <p className="text-xs text-muted-foreground">
-                  {new Date(feedback.date).toLocaleString()}
-                </p>
-              </div>
-              <Badge 
-                className={
-                  feedback.status === 'approved' ? 'bg-green-100 text-green-800 hover:bg-green-200' :
-                  feedback.status === 'rejected' ? 'bg-red-100 text-red-800 hover:bg-red-200' :
-                  'bg-amber-100 text-amber-800 hover:bg-amber-200'
-                }
-              >
-                {feedback.status}
-              </Badge>
+          <div className="flex overflow-auto">
+            <div className="in-w-40 max-w-40  bg-muted">
+              <img
+                src={feedback.image?.url}
+                className="object-cover h-full w-full"
+              />
             </div>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm">{feedback.text}</p>
-            
-            {isAdmin && feedback.status === 'pending' && (
-              <div className="mt-4 flex items-center gap-2">
-                <Button 
-                  size="sm" 
-                  onClick={() => handleUpdateStatus(feedback._id, 'approved')}
-                  disabled={loading}
-                  className="h-8 bg-green-600 hover:bg-green-700 text-white"
-                >
-                  {loading ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <>
-                      <Check className="mr-1 h-4 w-4" />
-                      Approve
-                    </>
-                  )}
-                </Button>
-                <Button 
-                  size="sm" 
-                  onClick={() => handleUpdateStatus(feedback._id, 'rejected')}
-                  disabled={loading}
-                  className="h-8 bg-red-600 hover:bg-red-700 text-white"
-                >
-                  {loading ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <>
-                      <X className="mr-1 h-4 w-4" />
-                      Reject
-                    </>
-                  )}
-                </Button>
-              </div>
-            )}
-            
-            <Separator className="my-4" />
-            <p className="text-xs text-muted-foreground">
-              Feedback ID: {feedback._id}
-            </p>
-          </CardContent>
+            <div className='flex-1'>
+              <CardHeader className="pb-3">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <CardTitle className="text-base">
+                      {feedback.user?.name || 'Anonymous'}
+                    </CardTitle>
+                    <p className="text-xs text-muted-foreground">
+                      {new Date(feedback.date).toLocaleString()}
+                    </p>
+                  </div>
+                  <Badge
+                    className={
+                      feedback.status === 'approved' ? 'bg-green-100 text-green-800 hover:bg-green-200' :
+                        feedback.status === 'rejected' ? 'bg-red-100 text-red-800 hover:bg-red-200' :
+                          'bg-amber-100 text-amber-800 hover:bg-amber-200'
+                    }
+                  >
+                    {feedback.status}
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm">{feedback.text}</p>
+
+                {isAdmin && feedback.status === 'pending' && (
+                  <div className="mt-4 flex items-center gap-2">
+                    <Button
+                      size="sm"
+                      onClick={() => handleUpdateStatus(feedback._id, 'approved')}
+                      disabled={loading}
+                      className="h-8 bg-green-600 hover:bg-green-700 text-white"
+                    >
+                      {loading ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <>
+                          <Check className="mr-1 h-4 w-4" />
+                          Approve
+                        </>
+                      )}
+                    </Button>
+                    <Button
+                      size="sm"
+                      onClick={() => handleUpdateStatus(feedback._id, 'rejected')}
+                      disabled={loading}
+                      className="h-8 bg-red-600 hover:bg-red-700 text-white"
+                    >
+                      {loading ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <>
+                          <X className="mr-1 h-4 w-4" />
+                          Reject
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                )}
+
+                <Separator className="my-4" />
+                <p className='text-sm text-muted-foreground font-semibold'>
+                  Classification:
+                  <span className={feedback.image?.classification?.classification.includes('edible') ? 'text-green-600' : feedback.image?.classification?.classification.includes('poisonous') ? 'text-red-600' : 'text-gray-600'}>
+                    &nbsp;{feedback.image?.classification?.classification || 'Unknown Classification'}
+                  </span>
+                </p>
+                {isAdmin &&
+                  <p className="text-xs text-muted-foreground">
+                    Feedback ID: {feedback._id}
+                  </p>
+                }
+
+              </CardContent>
+            </div>
+          </div>
         </Card>
       ))}
     </div>

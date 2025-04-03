@@ -81,6 +81,7 @@ router.get('/user', authenticate, async (req, res) => {
         path: 'image',
         populate: { path: 'classification' },
       })
+      .populate('user', 'name')
       .sort({ date: -1 });
 
     res.json(feedback);
