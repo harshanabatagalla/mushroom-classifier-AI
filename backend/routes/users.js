@@ -114,7 +114,7 @@ router.delete('/:id', authenticate, isAdmin, async (req, res) => {
     }
     
     // Delete user
-    await user.remove();
+    await user.deleteOne();
     
     res.json({ message: 'User removed' });
   } catch (err) {
