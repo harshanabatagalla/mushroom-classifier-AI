@@ -77,6 +77,7 @@ export const ImageProvider = ({ children }) => {
     setLoading(true);
     try {
       const response = await api.post(`/images/analyze/${imageId}`);
+      console.log("Analysis response:", response.data);
       
       // Update the image to mark it as analyzed
       setImages(prevImages => 
