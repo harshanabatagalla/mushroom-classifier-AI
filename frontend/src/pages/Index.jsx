@@ -249,7 +249,7 @@ const Index = () => {
                 </div>
 
                 <div className="relative mb-4 overflow-auto">
-                  <p className="text-gray-700 italic bg-gray-50 p-3 rounded-lg border-l-2 border-mushroom-primary">"{item.text}"</p>
+                  <p className="text-gray-700 italic bg-gray-50 p-3 rounded-lg border-l-2 border-mushroom-primary text-sm">"{item.text}"</p>
                 </div>
 
                 <div className="flex justify-between items-center pt-2 border-t border-gray-100">

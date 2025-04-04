@@ -71,7 +71,7 @@ const FeedbackList = ({ userId, isAdmin = false }) => {
     <div className="space-y-4">
       {feedbackList.map((feedback) => (
         <Card key={feedback._id}>
-          <div className="flex overflow-auto">
+          <div className="flex">
             <div className="in-w-40 max-w-40  bg-muted">
               <img
                 src={feedback.image?.url}
@@ -101,7 +101,8 @@ const FeedbackList = ({ userId, isAdmin = false }) => {
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="text-sm">{feedback.text}</p>
+
+                <p className="text-sm whitespace-pre-wrap break-words overflow-auto max-w-screen-md">{feedback.text}</p>
 
                 {isAdmin && feedback.status === 'pending' && (
                   <div className="mt-4 flex items-center gap-2">
