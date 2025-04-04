@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Leaf, User, LogOut, Settings, Home, Menu, LogIn, UserPlus } from 'lucide-react';
+import { Leaf, User, LogOut, Settings, Home, Menu, LogIn, UserPlus, Layers } from 'lucide-react';
 
 const Header = () => {
   const { currentUser, logout, isAdmin } = useAuth();
@@ -40,6 +40,11 @@ const Header = () => {
           <Link to="/about" className="text-sm font-medium hover:text-mushroom-primary">
             About
           </Link>
+          {currentUser && (
+            <Link to="/my-collection" className="text-sm font-medium hover:text-mushroom-primary">
+              My Collection
+            </Link>
+          )}
         </nav>
         
         {/* Mobile Navigation */}
@@ -77,6 +82,16 @@ const Header = () => {
                 <User className="inline mr-2 h-4 w-4" />
                 About
               </Link>
+              {currentUser && (
+                <Link
+                  to="/my-collection"
+                  className="text-base font-medium px-4 py-2 hover:bg-gray-100 rounded-md"
+                  onClick={closeMobileMenu}
+                >
+                  <Layers className="inline mr-2 h-4 w-4" />
+                  My Collection
+                </Link>
+              )}
               
               {/* Add login/signup links for mobile when user is not logged in */}
               {!currentUser && (
