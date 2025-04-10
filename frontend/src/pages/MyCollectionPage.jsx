@@ -4,31 +4,24 @@ import MainLayout from '@/components/Layout/MainLayout';
 import { useAuth } from '@/context/AuthContext';
 import { useImage } from '@/context/ImageContext';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Input } from '@/components/ui/input';
 import FeedbackList from '@/components/Feedback/FeedbackList';
-import { User, FileImage, Loader2, AlertTriangle, CheckCircle2, HelpCircle, Info, Edit2, Eye, Save } from 'lucide-react';
+import { FileImage, Loader2, AlertTriangle, CheckCircle2, HelpCircle, Info } from 'lucide-react';
 import { toast } from 'sonner';
 import ClassificationResult from '../components/Identification/ClassificationResult';
-import api from '../services/api';
 
 function MyCollectionPage() {
-    const { currentUser, logout } = useAuth();
+    const { currentUser } = useAuth();
     const { fetchUserImages, getUserImages, analyzeImage } = useImage();
     const [userImages, setUserImages] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedImage, setSelectedImage] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [analyzingId, setAnalyzingId] = useState(null);
-    const [isEditing, setIsEditing] = useState(false);
-    const [profileData, setProfileData] = useState({
-      name: '',
-      email: ''
-    });
   
     useEffect(() => {
       const loadUserData = async () => {
@@ -47,51 +40,6 @@ function MyCollectionPage() {
   
       loadUserData();
     }, [currentUser]);
-  
-    const handleEditToggle = () => {
-      if (isEditing) {
-        // Discard changes
-        setProfileData({
-          name: currentUser.name,
-          email: currentUser.email
-        });
-      }
-      setIsEditing(!isEditing);
-    };
-  
-    const handleInputChange = (e) => {
-      const { name, value } = e.target;
-      setProfileData(prev => ({
-        ...prev,
-        [name]: value
-      }));
-    };
-  
-    const handleSaveProfile = async () => {
-      if (!profileData.name || !profileData.email) {
-        toast.error("All fields are required");
-        return;
-      }
-      try {
-        const response = await api.put(`/users/${currentUser.id}`, profileData);
-        if (response.status !== 200) {
-          toast.error("Failed to update profile");
-          return;
-        }
-        // Update the current user context
-        currentUser.name = profileData.name;
-        currentUser.email = profileData.email;
-        // Update the user images with the new profile data
-        setUserImages(userImages.map(img => ({ ...img, user: { ...img.user, name: profileData.name, email: profileData.email } })));
-        // Show success message
-        toast.success("Profile updated successfully");
-        setIsEditing(false);
-      }
-      catch (error) {
-        console.error("Error updating profile:", error);
-        toast.error("Failed to update profile");
-      }
-    };
   
     // Handle analysis request
     const handleAnalyzeImage = async (imageId) => {
