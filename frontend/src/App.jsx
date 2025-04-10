@@ -12,6 +12,7 @@ import ProfilePage from "./pages/ProfilePage";
 import AdminPage from "./pages/AdminPage";
 import AboutPage from "./pages/AboutPage";
 import MyCollectionPage from "./pages/MyCollectionPage";
+import FeedbackPage from "./pages/FeedbackPage";
 import { AuthProvider } from "./context/AuthContext";
 import { ImageProvider } from "./context/ImageContext";
 import { FeedbackProvider } from "./context/FeedbackContext";
@@ -36,6 +37,7 @@ const App = () => (
                 <Route path="/admin" element={<AdminPage />} />
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/my-collection" element={<MyCollectionPage />} />
+                <Route path="/feedback" element={<FeedbackPage />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
