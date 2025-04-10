@@ -9,7 +9,7 @@ const ClassificationSchema = new mongoose.Schema({
   },
   classification: {
     type: String,
-    enum: ['edible', 'poisonous', 'unknown', 'not_a_mushroom','edible_mushroom_sporocarp','poisonous_mushroom_sporocarp','edible_sporocarp','poisonous_sporocarp'],
+    enum: ['conditionally_edible', 'deadly', 'edible', 'poisonous', 'not_a_mushroom'],
     required: true,
   },
   confidence: {

@@ -101,7 +101,7 @@ router.post('/analyze/:id', authenticate, async (req, res) => {
     });
 
     // Verify Python script exists
-    const scriptPath = path.join(__dirname, '../utils/mushroom_classifier.py');
+    const scriptPath = path.join(__dirname, '../utils/predict.py');
     if (!fs.existsSync(scriptPath)) {
       return res.status(500).json({ message: 'Classification script not found' });
     }
@@ -139,7 +139,7 @@ router.post('/analyze/:id', authenticate, async (req, res) => {
       console.log('Raw Python output:', output);
 
       // Remove extra log data (everything before the JSON string)
-      const jsonMatch = output.match(/{.*}/);
+      const jsonMatch = output.match(/{.*}/s); // Added 's' flag to match across multiple lines
       if (!jsonMatch) {
         return res.status(500).json({
           message: 'Failed to parse classification result',
@@ -152,27 +152,33 @@ router.post('/analyze/:id', authenticate, async (req, res) => {
       try {
         const result = JSON.parse(jsonMatch[0].trim());
 
+        // Map new format to old format for compatibility
+        let className = result.classification || 'unknown';
+        let confidence = result.confidence || '0.00%';
+        
         // Determine if edible based on class name
-        const isEdible = result.class.includes('edible');
-        const isPoisonous = result.class.includes('poisonous');
-
-        // Handle case when the model returns "not_a_mushroom" or "unknown"
+        const isEdible = className.toLowerCase().includes('edible');
+        const isPoisonous = className.toLowerCase().includes('poisonous');
+        
+        // Handle case when the image is not a mushroom
         let classification;
-        if (result.class === 'not_a_mushroom') {
+        if (!result.is_mushroom) {
           classification = {
             image: image._id,
-            classification: result.class,
-            confidence: result.confidence,
+            classification: 'not_a_mushroom',
+            confidence: confidence,
             details: 'The image does not appear to be a mushroom or is not clearly identifiable.'
           };
-        }  else {
+        } else {
           classification = {
             image: image._id,
-            classification: result.class,
-            confidence: result.confidence,
+            classification: className.toLowerCase(),
+            confidence: confidence,
             details: result.details || (isEdible
               ? 'This mushroom appears to be from an edible variety, though always consult an expert before consumption.'
-              : 'This mushroom appears to have characteristics consistent with poisonous varieties. Do not consume.'),
+              : isPoisonous
+                ? 'This mushroom appears to have characteristics consistent with poisonous varieties. Do not consume.'
+                : 'This mushroom type has been identified. Always consult an expert before handling or consuming any wild mushroom.'),
           };
         }
 
