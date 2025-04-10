@@ -65,7 +65,7 @@ const ProfileActivity = ({ imageCount = 0, feedbackCount = 0 }) => {
       </CardContent>
       <CardFooter>
         <Button className="w-full" variant="outline" asChild>
-          <Link to="/my-identifications">View Your Identifications & Feedback</Link>
+          <Link to="/my-collection">View Your Identifications & Feedback</Link>
         </Button>
       </CardFooter>
     </Card>
