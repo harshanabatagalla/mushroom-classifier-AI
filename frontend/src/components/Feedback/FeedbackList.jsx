@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useFeedback } from '@/context/FeedbackContext';
 import { useAuth } from '@/context/AuthContext';
@@ -67,15 +66,28 @@ const FeedbackList = ({ userId, isAdmin = false }) => {
     );
   };
 
+  // Function to determine classification text color
+  const getClassificationColor = (classification) => {
+    if (!classification) return 'text-gray-600';
+    
+    const classText = classification.toLowerCase();
+    if (classText == 'conditionally_edible') return 'text-amber-600';
+    if (classText == 'edible') return 'text-green-600';
+    if (classText == 'deadly' || classText =='poisonous') return 'text-red-600';
+    if (classText == 'not_a_mushroom') return 'text-blue-600';
+    return 'text-gray-600';
+  };
+
   return (
     <div className="space-y-4">
       {feedbackList.map((feedback) => (
         <Card key={feedback._id}>
           <div className="flex">
-            <div className="in-w-40 max-w-40  bg-muted">
+            <div className="min-w-40 max-w-40 bg-muted">
               <img
                 src={feedback.image?.url}
                 className="object-cover h-full w-full"
+                alt="Mushroom image"
               />
             </div>
             <div className='flex-1'>
@@ -101,7 +113,6 @@ const FeedbackList = ({ userId, isAdmin = false }) => {
                 </div>
               </CardHeader>
               <CardContent>
-
                 <p className="text-sm whitespace-pre-wrap break-words overflow-auto max-w-screen-md">{feedback.text}</p>
 
                 {isAdmin && feedback.status === 'pending' && (
@@ -142,7 +153,7 @@ const FeedbackList = ({ userId, isAdmin = false }) => {
                 <Separator className="my-4" />
                 <p className='text-sm text-muted-foreground font-semibold'>
                   Classification:
-                  <span className={feedback.image?.classification?.classification.includes('edible') ? 'text-green-600' : feedback.image?.classification?.classification.includes('poisonous') ? 'text-red-600' : 'text-gray-600'}>
+                  <span className={getClassificationColor(feedback.image?.classification?.classification)}>
                     &nbsp;{feedback.image?.classification?.classification || 'Unknown Classification'}
                   </span>
                 </p>
@@ -151,7 +162,6 @@ const FeedbackList = ({ userId, isAdmin = false }) => {
                     Feedback ID: {feedback._id}
                   </p>
                 }
-
               </CardContent>
             </div>
           </div>

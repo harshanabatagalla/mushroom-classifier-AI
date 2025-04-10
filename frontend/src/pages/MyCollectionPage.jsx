@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import FeedbackList from '@/components/Feedback/FeedbackList';
-import { FileImage, Loader2, AlertTriangle, CheckCircle2, HelpCircle, Info } from 'lucide-react';
+import { FileImage, Loader2, AlertTriangle, CheckCircle2, HelpCircle, Info, AlertCircle } from 'lucide-react';
 import ClassificationResult from '../components/Identification/ClassificationResult';
 
 function MyCollectionPage() {
@@ -91,17 +91,20 @@ function MyCollectionPage() {
   
       const classType = classification.toLowerCase();
   
-      if (classType.includes('edible')) {
-        return <Badge className="bg-green-500 hover:bg-green-600">Edible</Badge>;
-      } else if (classType.includes('poisonous')) {
-        return <Badge className="bg-red-500 hover:bg-red-600">Poisonous</Badge>;
-      } else if (classType === 'unknown') {
-        return <Badge className="bg-yellow-500 hover:bg-yellow-600">Unknown</Badge>;
-      } else if (classType === 'not_a_mushroom') {
-        return <Badge className="bg-gray-500 hover:bg-gray-600">Not a Mushroom</Badge>;
+      switch (classType) {
+        case 'edible':
+          return <Badge className="bg-green-500 hover:bg-green-600">Edible</Badge>;
+        case 'conditionally_edible':
+          return <Badge className="bg-amber-500 hover:bg-amber-600">Conditionally Edible</Badge>;
+        case 'poisonous':
+          return <Badge className="bg-red-500 hover:bg-red-600">Poisonous</Badge>;
+        case 'deadly':
+          return <Badge className="bg-red-500 hover:bg-red-600">Deadly</Badge>;
+        case 'not_a_mushroom':
+          return <Badge className="bg-gray-500 hover:bg-gray-600">Not a Mushroom</Badge>;
+        default:
+          return <Badge className="bg-yellow-500 hover:bg-yellow-600">Unknown</Badge>;
       }
-  
-      return <Badge>{classification}</Badge>;
     };
   
     // Functions for the modal styling similar to ClassificationResult
@@ -110,10 +113,20 @@ function MyCollectionPage() {
   
       const classType = classification.toLowerCase();
   
-      if (classType.includes('edible')) return <CheckCircle2 className="h-5 w-5 text-green-600" />;
-      if (classType.includes('poisonous')) return <AlertTriangle className="h-5 w-5 text-red-600" />;
-      if (classType === 'not_a_mushroom') return <HelpCircle className="h-5 w-5 text-gray-600" />;
-      return <Info className="h-5 w-5 text-yellow-600" />; // For unknown
+      switch (classType) {
+        case 'edible':
+          return <CheckCircle2 className="h-5 w-5 text-green-600" />;
+        case 'conditionally_edible':
+          return <Info className="h-5 w-5 text-amber-600" />;
+        case 'poisonous':
+          return <AlertCircle className="h-5 w-5 text-orange-600" />;
+        case 'deadly':
+          return <AlertTriangle className="h-5 w-5 text-red-600" />;
+        case 'not_a_mushroom':
+          return <HelpCircle className="h-5 w-5 text-gray-600" />;
+        default:
+          return <Info className="h-5 w-5 text-yellow-600" />; // For unknown
+      }
     };
   
     const getProgressStyles = (classification) => {
@@ -121,10 +134,20 @@ function MyCollectionPage() {
   
       const classType = classification.toLowerCase();
   
-      if (classType.includes('edible')) return "text-green-500 bg-green-100 h-2";
-      if (classType.includes('poisonous')) return "text-red-500 bg-red-100 h-2";
-      if (classType === 'not_a_mushroom') return "text-gray-500 bg-gray-100 h-2";
-      return "text-yellow-500 bg-yellow-100 h-2"; // For unknown
+      switch (classType) {
+        case 'edible':
+          return "text-green-500 bg-green-100 h-2";
+        case 'conditionally_edible':
+          return "text-amber-500 bg-amber-100 h-2";
+        case 'poisonous':
+          return "text-red-500 bg-red-100 h-2";
+        case 'deadly':
+          return "text-red-500 bg-red-100 h-2";
+        case 'not_a_mushroom':
+          return "text-gray-500 bg-gray-100 h-2";
+        default:
+          return "text-yellow-500 bg-yellow-100 h-2"; // For unknown
+      }
     };
   
     const getClassificationColor = (classification) => {
@@ -132,10 +155,20 @@ function MyCollectionPage() {
   
       const classType = classification.toLowerCase();
   
-      if (classType.includes('edible')) return "text-green-600";
-      if (classType.includes('poisonous')) return "text-red-600";
-      if (classType === 'not_a_mushroom') return "text-gray-600";
-      return "text-yellow-600"; // For unknown
+      switch (classType) {
+        case 'edible':
+          return "text-green-600";
+        case 'conditionally_edible':
+          return "text-amber-600";
+        case 'poisonous':
+          return "text-red-600";
+        case 'deadly':
+          return "text-red-600";
+        case 'not_a_mushroom':
+          return "text-gray-600";
+        default:
+          return "text-yellow-600"; // For unknown
+      }
     };
   
     const truncateFileName = (fileName, maxLength = 20) => {

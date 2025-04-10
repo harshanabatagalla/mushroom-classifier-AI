@@ -1,9 +1,8 @@
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MainLayout from '@/components/Layout/MainLayout';
 import { Button } from '@/components/ui/button';
-import { Search, Leaf, AlertCircle, FileText, Upload, MessageSquare, ThumbsUp } from 'lucide-react';
+import { Search, Leaf, AlertCircle, FileText, Upload, MessageSquare, ThumbsUp, Users } from 'lucide-react';
 import api from '@/services/api';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -51,17 +50,21 @@ const Index = () => {
     let dotClasses = '';
     let label = classification || 'Unknown';
 
-    if (classification?.includes('edible')) {
+    if (classification === 'edible') {
       badgeClasses = 'bg-green-100 text-green-800';
       dotClasses = 'bg-green-500';
       label = 'Edible';
-    } else if (classification?.includes('poisonous')) {
+    } else if (classification === 'poisonous' || classification === 'deadly') {
       badgeClasses = 'bg-red-100 text-red-800';
       dotClasses = 'bg-red-500';
-      label = 'Poisonous';
+      label = classification === 'deadly' ? 'Deadly' : 'Poisonous';
+    } else if (classification === 'conditionally_edible') {
+      badgeClasses = 'bg-amber-100 text-amber-800';
+      dotClasses = 'bg-amber-500';
+      label = 'Conditionally Edible';
     } else if (classification === 'not_a_mushroom') {
-      badgeClasses = 'bg-gray-100 text-gray-800';
-      dotClasses = 'bg-gray-500';
+      badgeClasses = 'bg-blue-100 text-blue-800';
+      dotClasses = 'bg-blue-500';
       label = 'Not a Mushroom';
     } else {
       badgeClasses = 'bg-yellow-100 text-yellow-800';
@@ -70,7 +73,7 @@ const Index = () => {
     }
     
     return (
-      <span className={`text-xs px-2 py-1 rounded-full inline-flex items-center  gap-1 ${badgeClasses}`}>
+      <span className={`text-xs px-2 py-1 rounded-full inline-flex items-center gap-1 ${badgeClasses}`}>
         <div className={`w-2 h-2 rounded-full ${dotClasses}`}></div>
         {label}
       </span>
@@ -115,7 +118,7 @@ const Index = () => {
       </section>
 
       {/* Features Section */}
-      <section className="container px-4 py-16">
+      <section className="container px-8 py-16">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-2">How It Works</h2>
           <p className="text-muted-foreground max-w-[700px] mx-auto">
@@ -136,7 +139,7 @@ const Index = () => {
       </section>
 
       {/* How To Use Section */}
-      <section className="bg-muted py-16">
+      <section className="bg-muted py-16 px-8">
         <div className="container px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-2">How To Use</h2>
@@ -190,7 +193,7 @@ const Index = () => {
       </section>
 
       {/* Recent User Feedback Section */}
-      <section className="container px-4 py-16 bg-gradient-to-b from-gray-50 to-white">
+      <section className="container px-8 py-16 bg-gradient-to-b from-gray-50 to-white">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-3 bg-clip-text text-mushroom-dark">Community Experiences</h2>
           <p className="text-muted-foreground max-w-[700px] mx-auto">
@@ -230,40 +233,52 @@ const Index = () => {
             </Button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {recentFeedback.map((item) => (
-              <div key={item._id} className="bg-white rounded-xl p-6 shadow-md border border-gray-100 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
-                <div className="flex items-center space-x-4 mb-4">
-                  <div className="h-16 w-16 overflow-hidden border-2 border-gray-200">
-                    <img
-                      src={item.image?.url || "/api/placeholder/80/80"}
-                      alt="Mushroom"
-                      className="w-full h-full object-cover"
-                      onError={(e) => { e.target.src = "/api/placeholder/80/80" }}
-                    />
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {recentFeedback.map((item) => (
+                <div key={item._id} className="bg-white rounded-xl p-6 shadow-md border border-gray-100 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                  <div className="flex items-center space-x-4 mb-4">
+                    <div className="h-16 w-16 overflow-hidden border-2 border-gray-200">
+                      <img
+                        src={item.image?.url || "/api/placeholder/80/80"}
+                        alt="Mushroom"
+                        className="w-full h-full object-cover"
+                        onError={(e) => { e.target.src = "/api/placeholder/80/80" }}
+                      />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-800">{item.user?.name || "Forager"}</h3>
+                      {renderClassificationBadge(item.image?.classification?.classification)}
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-800">{item.user?.name || "Forager"}</h3>
-                    {renderClassificationBadge(item.image?.classification?.classification)}
-                  </div>
-                </div>
 
-                <div className="relative mb-4 overflow-auto">
-                  <p className="text-gray-700 italic bg-gray-50 p-3 rounded-lg border-l-2 border-mushroom-primary text-sm">"{item.text}"</p>
-                </div>
+                  <div className="relative mb-4 overflow-auto">
+                    <p className="text-gray-700 italic bg-gray-50 p-3 rounded-lg border-l-2 border-mushroom-primary text-sm">"{item.text}"</p>
+                  </div>
 
-                <div className="flex justify-between items-center pt-2 border-t border-gray-100">
-                  <p className="text-xs text-muted-foreground">
-                    {new Date(item.date).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
-                  </p>
-                  <div className="flex items-center text-xs text-muted-foreground">
-                    <MessageSquare className="h-3 w-3 mr-1" />
-                    <span>Feedback</span>
+                  <div className="flex justify-between items-center pt-2 border-t border-gray-100">
+                    <p className="text-xs text-muted-foreground">
+                      {new Date(item.date).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
+                    </p>
+                    <div className="flex items-center text-xs text-muted-foreground">
+                      <MessageSquare className="h-3 w-3 mr-1" />
+                      <span>Feedback</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+            <div className="flex justify-center mt-8">
+              <Button 
+                onClick={() => navigate('/feedback')}
+                variant="outline"
+                className="flex items-center gap-2"
+              >
+                <Users className="h-4 w-4" />
+                View All Community Feedback
+              </Button>
+            </div>
+          </>
         )}
       </section>
 
