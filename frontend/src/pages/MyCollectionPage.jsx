@@ -11,12 +11,18 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import FeedbackList from '@/components/Feedback/FeedbackList';
 import { FileImage, Loader2, AlertTriangle, CheckCircle2, HelpCircle, Info } from 'lucide-react';
-import { toast } from 'sonner';
 import ClassificationResult from '../components/Identification/ClassificationResult';
 
 function MyCollectionPage() {
     const { currentUser } = useAuth();
-    const { fetchUserImages, getUserImages, analyzeImage } = useImage();
+    const { 
+      fetchUserImages, 
+      getUserImages, 
+      analyzeImage, 
+      loading: contextLoading, 
+      getImage 
+    } = useImage();
+    
     const [userImages, setUserImages] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedImage, setSelectedImage] = useState(null);
@@ -31,10 +37,6 @@ function MyCollectionPage() {
           const images = await getUserImages(currentUser.id);
           setUserImages(images);
           setLoading(false);
-          setProfileData({
-            name: currentUser.name,
-            email: currentUser.email
-          });
         }
       };
   
@@ -45,27 +47,33 @@ function MyCollectionPage() {
     const handleAnalyzeImage = async (imageId) => {
       try {
         setAnalyzingId(imageId);
-        const response = await analyzeImage(imageId);
-        // Update the image in the userImages list
-        setUserImages(userImages.map(img =>
-          img._id === imageId ? { ...img, analyzed: true, classification: response.classification } : img
-        ));
-  
-        if (selectedImage && selectedImage._id === imageId) {
-          setSelectedImage({ ...selectedImage, analyzed: true, classification: response.classification });
+        
+        await analyzeImage(imageId);
+        
+        // Fetch the updated image with classification data
+        const { success, image } = await getImage(imageId);
+        
+        if (success) {
+          // Update the image in the userImages list
+          setUserImages(prevImages => 
+            prevImages.map(img => img._id === imageId ? image : img)
+          );
+          
+          // If analyzing through the modal, update the selected image
+          if (selectedImage && selectedImage._id === imageId) {
+            setSelectedImage(image);
+          }
+          
+          // Open modal with results if not already open
+          if (!isModalOpen) {
+            setSelectedImage(image);
+            setIsModalOpen(true);
+          }
+          
+        } else {
+          throw new Error("Failed to fetch updated image data");
         }
-  
-        toast({
-          title: "Analysis Complete",
-          description: "Your mushroom image has been successfully analyzed.",
-          variant: "success"
-        });
       } catch (error) {
-        toast({
-          title: "Analysis Failed",
-          description: "There was an error analyzing your image. Please try again.",
-          variant: "destructive"
-        });
         console.error("Error analyzing image:", error);
       } finally {
         setAnalyzingId(null);
@@ -97,17 +105,6 @@ function MyCollectionPage() {
     };
   
     // Functions for the modal styling similar to ClassificationResult
-    const getAlertStyles = (classification) => {
-      if (!classification) return "border-gray-500 bg-gray-50";
-  
-      const classType = classification.toLowerCase();
-  
-      if (classType.includes('edible')) return "border-green-500 bg-green-50";
-      if (classType.includes('poisonous')) return "border-red-500 bg-red-50";
-      if (classType === 'not_a_mushroom') return "border-gray-500 bg-gray-50";
-      return "border-yellow-500 bg-yellow-50"; // For unknown
-    };
-  
     const getAlertIcon = (classification) => {
       if (!classification) return <HelpCircle className="h-5 w-5 text-gray-600" />;
   
@@ -151,6 +148,9 @@ function MyCollectionPage() {
       return <Navigate to="/login" replace />;
     }
   
+    // Determine if the page is loading - either from local state or context
+    const isLoading = loading || contextLoading;
+  
     return (
       <MainLayout>
         <section className="container py-8 md:py-12">
@@ -170,7 +170,7 @@ function MyCollectionPage() {
               </TabsList>
   
               <TabsContent value="identifications" className="space-y-4">
-                {loading ? (
+                {isLoading ? (
                   <div className="flex justify-center items-center p-8">
                     <Loader2 className="h-8 w-8 animate-spin text-mushroom-primary" />
                   </div>
@@ -197,7 +197,7 @@ function MyCollectionPage() {
                     {userImages.map((image) => (
                       <Card
                         key={image._id}
-                        className="cursor-pointer hover:shadow-lg transition-shadow flex flex-col pb-4 border-mushroom-primary border-opacity-30 "
+                        className="cursor-pointer hover:shadow-lg transition-shadow flex flex-col pb-4 border-mushroom-primary border-opacity-30"
                         onClick={() => openImageModal(image)}
                       >
                         <div className="relative pb-10">
@@ -206,15 +206,12 @@ function MyCollectionPage() {
                             alt={`Mushroom ${image._id}`}
                             className="object-cover w-full h-full max-h-52"
                           />
-                          {image.analyzed ? (
-                            <div className="absolute top-2 right-2 flex gap-2">
-                              {getClassificationBadge(image.classification?.classification)}
-                            </div>
-                          ) : (
-                            <div className="absolute  top-2 right-2">
+                          <div className="absolute top-2 right-2 flex gap-2">
+                            {image.analyzed && image.classification ? 
+                              getClassificationBadge(image.classification.classification) :
                               <Badge variant="outline" className="bg-white">Not Analyzed</Badge>
-                            </div>
-                          )}
+                            }
+                          </div>
                         </div>
                         <CardContent className="p-3 flex-grow">
                           <div className="flex justify-between items-start mb-1">
@@ -229,9 +226,9 @@ function MyCollectionPage() {
                             {getAlertIcon(image.classification?.classification)}
                           </div>
   
-                          {image.analyzed ? (
+                          {image.analyzed && image.classification ? (
                             <div className="mt-2">
-                              {image.classification?.confidence && (
+                              {image.classification.confidence && (
                                 <div className="space-y-1">
                                   <div className="flex justify-between text-xs">
                                     <span>Confidence</span>
@@ -241,7 +238,7 @@ function MyCollectionPage() {
                                   </div>
                                   <Progress
                                     value={image.classification.confidence * 100}
-                                    className={getProgressStyles(image.classification?.classification)}
+                                    className={getProgressStyles(image.classification.classification)}
                                   />
                                 </div>
                               )}
@@ -278,7 +275,7 @@ function MyCollectionPage() {
               </TabsContent>
             </Tabs>
   
-            {/* Image Details Modal - Styled like ClassificationResult */}
+            {/* Image Details Modal */}
             <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
               <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
                 {selectedImage && (
@@ -295,8 +292,13 @@ function MyCollectionPage() {
                           className="object-contain w-full h-full"
                         />
                       </div>
+                      
+                      {/* Show classification result or analyze button */}
                       {selectedImage.analyzed && selectedImage.classification ? (
-                        <ClassificationResult result={selectedImage.classification} image={selectedImage} />
+                        <ClassificationResult 
+                          result={selectedImage.classification} 
+                          image={selectedImage} 
+                        />
                       ) : (
                         <div className="text-center py-4">
                           <AlertTriangle className="h-12 w-12 mx-auto text-yellow-500 mb-2" />
@@ -318,8 +320,8 @@ function MyCollectionPage() {
                               'Analyze Now'
                             )}
                           </Button>
-                        </div>)
-                      }
+                        </div>
+                      )}
                     </div>
                   </>
                 )}
