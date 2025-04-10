@@ -259,11 +259,11 @@ function MyCollectionPage() {
                             className="object-cover w-full h-full max-h-52"
                           />
                           {image.analyzed ? (
-                            <div className="absolute -top-2 -right-2 flex gap-2">
+                            <div className="absolute top-2 right-2 flex gap-2">
                               {getClassificationBadge(image.classification?.classification)}
                             </div>
                           ) : (
-                            <div className="absolute  -top-2 -right-2">
+                            <div className="absolute  top-2 right-2">
                               <Badge variant="outline" className="bg-white">Not Analyzed</Badge>
                             </div>
                           )}
