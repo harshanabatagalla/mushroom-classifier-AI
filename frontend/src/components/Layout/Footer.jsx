@@ -27,9 +27,6 @@ const Footer = () => {
           <Link to="/privacy" className="text-sm hover:underline">
             Privacy Policy
           </Link>
-          <Link to="/terms" className="text-sm hover:underline">
-            Terms of Service
-          </Link>
         </div>
         <div className="text-sm text-muted-foreground">
           © {new Date().getFullYear()} Mushroom SafeGuard. All rights reserved.
