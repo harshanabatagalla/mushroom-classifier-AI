@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Leaf, User, LogOut, Settings, Home, Menu, LogIn, UserPlus } from 'lucide-react';
+import { Leaf, User, LogOut, Settings, Home, Menu, LogIn, UserPlus, Layers, MessageSquare } from 'lucide-react';
 
 const Header = () => {
   const { currentUser, logout, isAdmin } = useAuth();
@@ -25,10 +25,10 @@ const Header = () => {
     <header className="border-b bg-white dark:bg-gray-900">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2">
-          <Leaf size={24} className="text-mushroom-primary" />
-          <span className="sm:text-xl text-md font-bold">Mushroom SafeGuard</span>
+          <img src="/logo.svg" alt="Fungalyzer AI Logo" className="h-8 w-8" />
+          <span className="sm:text-xl text-md font-bold">Fungalyzer AI</span>
         </Link>
-        
+
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-6">
           <Link to="/" className="text-sm font-medium hover:text-mushroom-primary">
@@ -40,10 +40,18 @@ const Header = () => {
           <Link to="/about" className="text-sm font-medium hover:text-mushroom-primary">
             About
           </Link>
+          <Link to="/feedback" className="text-sm font-medium hover:text-mushroom-primary">
+            Feedbacks
+          </Link>
+          {currentUser && (
+            <Link to="/my-collection" className="text-sm font-medium hover:text-mushroom-primary">
+              My Collection
+            </Link>
+          )}
         </nav>
-        
+
         {/* Mobile Navigation */}
-        <div className="md:hidden flex-1"/>
+        <div className="md:hidden flex-1" />
         <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
           <SheetTrigger asChild className="md:hidden">
             <Button variant="ghost" size="icon">
@@ -53,45 +61,63 @@ const Header = () => {
           </SheetTrigger>
           <SheetContent side="right" className="w-[250px] md:hidden">
             <div className="flex flex-col gap-4 py-4">
-              <Link 
-                to="/" 
+              <Link
+                to="/"
                 className="text-base font-medium px-4 py-2 hover:bg-gray-100 rounded-md"
                 onClick={closeMobileMenu}
               >
                 <Home className="inline mr-2 h-4 w-4" />
                 Home
               </Link>
-              <Link 
-                to="/identify" 
+              <Link
+                to="/identify"
                 className="text-base font-medium px-4 py-2 hover:bg-gray-100 rounded-md"
                 onClick={closeMobileMenu}
               >
                 <Leaf className="inline mr-2 h-4 w-4" />
                 Identify
               </Link>
-              <Link 
-                to="/about" 
+              <Link
+                to="/about"
                 className="text-base font-medium px-4 py-2 hover:bg-gray-100 rounded-md"
                 onClick={closeMobileMenu}
               >
                 <User className="inline mr-2 h-4 w-4" />
                 About
               </Link>
-              
+              <Link
+                to="/feedback"
+                className="text-base font-medium px-4 py-2 hover:bg-gray-100 rounded-md"
+                onclick={closeMobileMenu}
+              >
+                <MessageSquare className="inline mr-2 h-4 w-4" />
+                Feedbacks
+              </Link>
+              {currentUser && (
+                <Link
+                  to="/my-collection"
+                  className="text-base font-medium px-4 py-2 hover:bg-gray-100 rounded-md"
+                  onClick={closeMobileMenu}
+                >
+                  <Layers className="inline mr-2 h-4 w-4" />
+                  My Collection
+                </Link>
+              )}
+
               {/* Add login/signup links for mobile when user is not logged in */}
               {!currentUser && (
                 <>
                   <div className="border-t my-2"></div>
-                  <Link 
-                    to="/login" 
+                  <Link
+                    to="/login"
                     className="text-base font-medium px-4 py-2 hover:bg-gray-100 rounded-md text-mushroom-primary"
                     onClick={closeMobileMenu}
                   >
                     <LogIn className="inline mr-2 h-4 w-4" />
                     Log In
                   </Link>
-                  <Link 
-                    to="/register" 
+                  <Link
+                    to="/register"
                     className="text-base font-medium px-4 py-2 bg-mushroom-primary text-white hover:bg-mushroom-dark rounded-md"
                     onClick={closeMobileMenu}
                   >
@@ -103,7 +129,7 @@ const Header = () => {
             </div>
           </SheetContent>
         </Sheet>
-        
+
         <div className="flex items-center gap-4">
           {currentUser ? (
             <DropdownMenu>
@@ -137,7 +163,7 @@ const Header = () => {
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuSeparator />
-                <DropdownMenuItem 
+                <DropdownMenuItem
                   onClick={logout}
                   className="flex items-center cursor-pointer"
                 >

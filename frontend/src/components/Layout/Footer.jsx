@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { Leaf } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Footer = () => {
@@ -9,8 +8,8 @@ const Footer = () => {
       <div className="container flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
-            <Leaf size={20} className="text-mushroom-primary" />
-            <span className="text-lg font-bold">Mushroom SafeGuard</span>
+            <img src="/logo.svg" alt="Fungalyzer AI Logo" className="h-8 w-8" />
+            <span className="text-lg font-bold">Fungalyzer AI</span>
           </div>
           <p className="text-sm text-muted-foreground">
             Safe mushroom identification using AI. <br />
@@ -27,12 +26,9 @@ const Footer = () => {
           <Link to="/privacy" className="text-sm hover:underline">
             Privacy Policy
           </Link>
-          <Link to="/terms" className="text-sm hover:underline">
-            Terms of Service
-          </Link>
         </div>
         <div className="text-sm text-muted-foreground">
-          © {new Date().getFullYear()} Mushroom SafeGuard. All rights reserved.
+          © {new Date().getFullYear()} Fungalyzer AI. All rights reserved.
         </div>
       </div>
     </footer>

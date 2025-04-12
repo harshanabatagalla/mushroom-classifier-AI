@@ -11,6 +11,10 @@ import IdentifyPage from "./pages/IdentifyPage";
 import ProfilePage from "./pages/ProfilePage";
 import AdminPage from "./pages/AdminPage";
 import AboutPage from "./pages/AboutPage";
+import MyCollectionPage from "./pages/MyCollectionPage";
+import FeedbackPage from "./pages/FeedbackPage";
+import PrivacyPage from "./pages/PrivacyPage";
+import ContactPage from "./pages/ContactPage";
 import { AuthProvider } from "./context/AuthContext";
 import { ImageProvider } from "./context/ImageContext";
 import { FeedbackProvider } from "./context/FeedbackContext";
@@ -34,6 +38,10 @@ const App = () => (
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/admin" element={<AdminPage />} />
                 <Route path="/about" element={<AboutPage />} />
+                <Route path="/my-collection" element={<MyCollectionPage />} />
+                <Route path="/feedback" element={<FeedbackPage />} />
+                <Route path="/privacy" element={<PrivacyPage />} />
+                <Route path="/contact" element={<ContactPage />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>

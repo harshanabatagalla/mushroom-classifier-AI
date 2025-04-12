@@ -99,6 +99,16 @@ export const FeedbackProvider = ({ children }) => {
     }
   };
 
+  const getPublicFeedback = async () => {
+    try {
+      const response = await api.get('/feedback/public');
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching public feedback:", error);
+      return [];
+    }
+  };
+
   const value = {
     feedback,
     loading,
@@ -106,7 +116,8 @@ export const FeedbackProvider = ({ children }) => {
     getUserFeedback,
     getAllFeedback,
     updateFeedbackStatus,
-    fetchFeedback
+    fetchFeedback,
+    getPublicFeedback
   };
 
   return (

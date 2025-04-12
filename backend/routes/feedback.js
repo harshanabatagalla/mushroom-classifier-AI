@@ -81,6 +81,7 @@ router.get('/user', authenticate, async (req, res) => {
         path: 'image',
         populate: { path: 'classification' },
       })
+      .populate('user', 'name')
       .sort({ date: -1 });
 
     res.json(feedback);
@@ -182,4 +183,47 @@ router.delete('/:id', authenticate, async (req, res) => {
   }
 });
 
+// @route   GET api/feedback/recent
+// @desc    Get recent feedback for public display
+// @access  Public
+router.get('/recent', async (req, res) => {
+  try {
+    // Fetch recent approved feedback (limit to 6)
+    const feedback = await Feedback.find({ status: 'approved' })
+      .populate('user', 'name')
+      .populate({
+        path: 'image',
+        populate: { path: 'classification' },
+      })
+      .sort({ date: -1 })
+      .limit(6);
+
+    res.json(feedback);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 module.exports = router;
+
+// @route   GET api/feedback/public
+// @desc    Get all approved feedback for public display
+// @access  Public
+router.get('/public', async (req, res) => {
+  try {
+    // Fetch all approved feedback
+    const feedback = await Feedback.find({ status: 'approved' })
+      .populate('user', 'name')
+      .populate({
+        path: 'image',
+        populate: { path: 'classification' },
+      })
+      .sort({ date: -1 });
+
+    res.json(feedback);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});

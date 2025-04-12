@@ -2,7 +2,7 @@
 {
   "name": "mushroom-safeguard-backend",
   "version": "1.0.0",
-  "description": "Backend for Mushroom SafeGuard app",
+  "description": "Backend for Fungalyzer AI app",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

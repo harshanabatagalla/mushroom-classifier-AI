@@ -27,8 +27,11 @@ const ImagePreview = ({ image }) => {
       </CardContent>
       <CardFooter className="flex justify-between gap-2 p-4">
         <div className="text-sm">
-          <p className="font-medium">{image.fileName}</p>
-          <p className="text-muted-foreground">
+          <p className="font-medium">
+            {image.fileName.length > 15
+              ? `${image.fileName.substring(0, 12)}...`
+              : image.fileName}
+          </p> <p className="text-muted-foreground">
             {new Date(image.uploadDate).toLocaleString()}
           </p>
         </div>

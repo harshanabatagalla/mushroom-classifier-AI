@@ -33,6 +33,7 @@ const FeedbackForm = ({ imageId }) => {
               value={text}
               onChange={(e) => setText(e.target.value)}
               className="min-h-[100px]"
+              maxLength={200}
               required
             />
             <p className="text-xs text-muted-foreground">

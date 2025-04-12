@@ -68,10 +68,7 @@ const LoginForm = () => {
           </div>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label htmlFor="password">Password</Label>
-              <Link to="/forgot-password" className="text-sm text-mushroom-primary hover:underline">
-                Forgot password?
-              </Link>
+              <Label htmlFor="password">Password</Label>     
             </div>
             <Input
               id="password"
@@ -98,28 +95,6 @@ const LoginForm = () => {
           <Link to="/register" className="text-mushroom-primary hover:underline font-medium">
             Sign up
           </Link>
-        </div>
-        
-        <div className="w-full border-t pt-4">
-          <p className="text-sm text-center mb-2 text-muted-foreground">Quick demo login:</p>
-          <div className="flex gap-2">
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="flex-1" 
-              onClick={() => handleDemoLogin('user')}
-            >
-              Demo User
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="flex-1" 
-              onClick={() => handleDemoLogin('admin')}
-            >
-              Demo Admin
-            </Button>
-          </div>
         </div>
       </CardFooter>
     </Card>
