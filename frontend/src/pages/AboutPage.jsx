@@ -2,7 +2,7 @@
 import React from 'react';
 import MainLayout from '@/components/Layout/MainLayout';
 import { Card, CardContent } from '@/components/ui/card';
-import { Leaf, AlertCircle, Book, HeartHandshake } from 'lucide-react';
+import { AlertCircle, Book, HeartHandshake } from 'lucide-react';
 
 const AboutPage = () => {
   return (
@@ -10,8 +10,8 @@ const AboutPage = () => {
       <section className="container py-12 md:py-16">
         <div className="max-w-3xl mx-auto">
           <div className="flex items-center justify-center mb-6">
-            <Leaf size={32} className="text-mushroom-primary mr-3" />
-            <h1 className="text-3xl md:text-4xl font-bold">About Mushroom SafeGuard</h1>
+            <img src='/logo.svg' alt="Fungalyzer AI Logo" className="h-12 w-12 mr-3" />
+            <h1 className="text-3xl md:text-4xl font-bold">About Fungalyzer AI</h1>
           </div>
           
           <div className="prose prose-lg max-w-none mb-12">
@@ -27,7 +27,7 @@ const AboutPage = () => {
                   <h2 className="text-2xl font-semibold">Our Story</h2>
                 </div>
                 <p className="mb-4">
-                  Mushroom SafeGuard was born from a passion for both technology and mycology.
+                  Fungalyzer AI was born from a passion for both technology and mycology.
                   Our founder, an avid mushroom forager, recognized the need for a reliable, 
                   accessible tool to help identify potentially dangerous mushrooms in the wild.
                 </p>

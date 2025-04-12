@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MainLayout from '@/components/Layout/MainLayout';
 import { Button } from '@/components/ui/button';
-import { Search, Leaf, AlertCircle, FileText, Upload, MessageSquare, ThumbsUp, Users } from 'lucide-react';
+import { Search, AlertCircle, FileText, Upload, MessageSquare, ThumbsUp, Users } from 'lucide-react';
 import api from '@/services/api';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -87,9 +87,9 @@ const Index = () => {
         <div className="container px-4 py-16 md:py-24 lg:py-32">
           <div className="flex flex-col items-center text-center">
             <div className="flex items-center mb-4">
-              <Leaf size={40} className="text-mushroom-primary mr-2" />
+              <img src="/logo.svg" alt="Fungalyzer AI Logo" className="h-12 w-12 mr-3" />
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight">
-                Mushroom SafeGuard
+                Fungalyzer AI
               </h1>
             </div>
             <p className="max-w-[700px] text-lg text-muted-foreground mb-6">

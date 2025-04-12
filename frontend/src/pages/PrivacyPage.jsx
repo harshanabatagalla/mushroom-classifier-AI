@@ -16,7 +16,7 @@ const PrivacyPage = () => {
             <section className="mb-8">
               <h2 className="text-xl font-semibold mb-3">1. Introduction</h2>
               <p>
-                Welcome to Mushroom SafeGuard. We respect your privacy and are committed to protecting your personal data. 
+                Welcome to Fungalyzer AI. We respect your privacy and are committed to protecting your personal data. 
                 This privacy policy will inform you about how we look after your personal data when you visit our website 
                 and tell you about your privacy rights and how the law protects you.
               </p>

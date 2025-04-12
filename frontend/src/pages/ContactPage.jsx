@@ -19,7 +19,7 @@ const ContactPage = () => {
                   <Mail className="h-6 w-6 text-mushroom-primary mt-1" />
                   <div>
                     <h3 className="font-medium text-lg">Email</h3>
-                    <p className="text-muted-foreground">contact@mushroomsafeguard.com</p>
+                    <p className="text-muted-foreground">contact@fungalizerAI.com</p>
                   </div>
                 </div>
                 
@@ -27,7 +27,7 @@ const ContactPage = () => {
                   <Phone className="h-6 w-6 text-mushroom-primary mt-1" />
                   <div>
                     <h3 className="font-medium text-lg">Phone</h3>
-                    <p className="text-muted-foreground">(555) 123-4567</p>
+                    <p className="text-muted-foreground">(+94) 123-4567</p>
                     <p className="text-sm text-muted-foreground">Monday - Friday, 9am - 5pm PST</p>
                   </div>
                 </div>
@@ -48,11 +48,11 @@ const ContactPage = () => {
             
             <div className="col-span-2">
               <div className="bg-background border rounded-lg p-6 shadow-sm">
-                <h2 className="text-xl font-semibold mb-4">Send us a message</h2>
+                <h1 className="text-xl font-semibold mb-4">Send us a message</h1>
                 <p className="text-muted-foreground mb-4">
                   You can reach out to us via email at 
-                  <a href="mailto:contact@mushroomsafeguard.com" className="text-mushroom-primary ml-1 hover:underline">
-                    contact@mushroomsafeguard.com
+                  <a href="mailto:contact@fungalizerAI.com" className="text-mushroom-primary ml-1 hover:underline">
+                    contact@fungalizerAI.com
                   </a>
                 </p>
                 <p className="text-sm text-muted-foreground">

@@ -25,8 +25,8 @@ const Header = () => {
     <header className="border-b bg-white dark:bg-gray-900">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2">
-          <Leaf size={24} className="text-mushroom-primary" />
-          <span className="sm:text-xl text-md font-bold">Mushroom SafeGuard</span>
+          <img src="/logo.svg" alt="Fungalyzer AI Logo" className="h-8 w-8" />
+          <span className="sm:text-xl text-md font-bold">Fungalyzer AI</span>
         </Link>
 
         {/* Desktop Navigation */}
